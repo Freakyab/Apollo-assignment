@@ -1,6 +1,13 @@
 "use client";
 import { useState, useEffect } from "react";
-import { CheckCircle, ArrowUpDown, ThumbsUp, X, Filter } from "lucide-react";
+import {
+  CheckCircle,
+  ArrowUpDown,
+  ThumbsUp,
+  X,
+  Filter,
+  Loader2,
+} from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
@@ -31,6 +38,7 @@ export default function ApolloPage() {
   // State variables
   const [selectedFilter, setSelectedFilter] = useState("relevance");
   const [filterData, setFilterData] = useState<Doctor[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [doctors, setDoctors] = useState<Doctor[]>([]);
   const [index, setIndex] = useState(10);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -51,6 +59,7 @@ export default function ApolloPage() {
   useEffect(() => {
     const fetchDoctors = async () => {
       try {
+        setIsLoading(true);
         const response = await fetch(
           "https://apollo-assignment-backend.vercel.app/",
           {
@@ -77,6 +86,7 @@ export default function ApolloPage() {
         toast.error(errorMessage);
         console.error("Error fetching data:", error);
       }
+      setIsLoading(false);
     };
 
     fetchDoctors();
@@ -168,7 +178,7 @@ export default function ApolloPage() {
         isOpen={isAddDoctorOpen}
         setIsOpen={setIsAddDoctorOpen}
       />
-      
+
       {/* Mobile Menu */}
       <div
         className={`md:hidden bg-white fixed top-0 left-0 w-full h-full z-50 transform transition-transform duration-300 ${
@@ -357,6 +367,10 @@ export default function ApolloPage() {
               </div>
             ))}
 
+            {isLoading && (
+              <Loader2 className="animate-spin text-blue-600 w-6 h-6 mx-auto" />
+            )}
+
             {filterData.length === 0 && (
               <div className="flex items-center justify-center h-64">
                 <p className="text-gray-500">No doctors found</p>
@@ -365,7 +379,7 @@ export default function ApolloPage() {
 
             {/* Pagination */}
             <div className="overflow-x-auto">
-                    {/* load 10 doctors at a time */}
+              {/* load 10 doctors at a time */}
               <Pagination>
                 <PaginationContent>
                   <PaginationItem>
