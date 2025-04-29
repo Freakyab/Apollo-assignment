@@ -57,7 +57,7 @@ export default function ApolloPage() {
   useEffect(() => {
     const fetchDoctors = async () => {
       try {
-        const response = await fetch("http://localhost:8000/", {
+        const response = await fetch("https://apollo-assignment-backend.vercel.app/", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",

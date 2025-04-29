@@ -929,7 +929,7 @@ app.get("/", async (_, res) => {
 
     return res.status(200).json({
       status: true,
-      data: doctors,
+      message : "working"
     });
   } catch (err) {
     console.log(err.message);
