@@ -929,7 +929,7 @@ app.get("/", async (_, res) => {
 
     return res.status(200).json({
       status: true,
-      message : "working"
+      data: doctors,
     });
   } catch (err) {
     console.log(err.message);
@@ -943,7 +943,7 @@ app.get("/", async (_, res) => {
 app.post("/add", async (req, res) => {
   try {
     const { name, year, post, location, fee, language } = req.body;
-
+    
     if (!name || !year || !post || !location || !fee || !language) {
       return res.status(400).json({
         message: "Please provide all the required fields",
