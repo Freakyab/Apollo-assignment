@@ -6,6 +6,7 @@ const DoctorSchema = new mongoose.Schema(
     name: {
       type: String,
       required: true,
+      unique: true,
     },
     year: {
       type: Number,

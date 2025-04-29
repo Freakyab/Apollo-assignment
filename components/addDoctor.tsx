@@ -23,7 +23,7 @@ function AddDoctorDialog({
   setIsOpen: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const [doctor, setDoctor] = useState({
-    name: "Dr. Rajeshwari Gupta",
+    name: "Dr. S. Krishnan",
     year: 3,
     post: "B.Pharma",
     city: "Mumbai",
@@ -79,7 +79,7 @@ function AddDoctorDialog({
         language: doctor.language,
       };
 
-      const response = await fetch("http://localhost:8000/add", {
+      const response = await fetch("https://apollo-assignment-backend.vercel.app/add", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
