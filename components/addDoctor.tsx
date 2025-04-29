@@ -29,7 +29,7 @@ function AddDoctorDialog({
     city: "Mumbai",
     state: "Maharashtra",
     fee: 370,
-    language: ["English"],
+    language: [ "English"],
   });
 
   const [selectedLanguages, setSelectedLanguages] = useState<string[]>([
@@ -79,7 +79,7 @@ function AddDoctorDialog({
         language: doctor.language,
       };
 
-      const response = await fetch("https://apollo-assignment-backend.vercel.app/add", {
+      const response = await fetch("http://localhost:8000/add", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
