@@ -60,15 +60,12 @@ export default function ApolloPage() {
     const fetchDoctors = async () => {
       try {
         setIsLoading(true);
-        const response = await fetch(
-          "https://apollo-assignment-backend.vercel.app/",
-          {
-            method: "GET",
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        );
+        const response = await fetch("https://apollo-assignment-backend.vercel.app/", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+          },
+        });
 
         if (!response.ok) {
           throw new Error("Network response was not ok");
@@ -77,6 +74,7 @@ export default function ApolloPage() {
         const resData = await response.json();
         if (resData.status) {
           setDoctors(resData.data);
+          setFilterData(resData.data);
         } else {
           throw new Error(resData.message);
         }
@@ -91,50 +89,6 @@ export default function ApolloPage() {
 
     fetchDoctors();
   }, []);
-
-  // Filter doctors based on selected criteria
-  useEffect(() => {
-    const filterDoctors = () => {
-      let filteredDoctors: Doctor[] = doctors;
-
-      if (filterType.startRange !== -1 && filterType.endRange !== -1) {
-        filteredDoctors = filteredDoctors.filter(
-          (doctor) =>
-            doctor.year >= filterType.startRange &&
-            doctor.year <= filterType.endRange
-        );
-      }
-
-      if (filterType.startFee !== -1 && filterType.endFee !== -1) {
-        filteredDoctors = filteredDoctors.filter(
-          (doctor) =>
-            doctor.fee >= filterType.startFee && doctor.fee <= filterType.endFee
-        );
-      }
-
-      if (filterType.language) {
-        filteredDoctors = filteredDoctors.filter((doctor) =>
-          doctor.language?.includes(filterType.language)
-        );
-      }
-
-      if (filterType.rating) {
-        filteredDoctors = filteredDoctors.filter(
-          (doctor) => doctor.rating && doctor.rating >= filterType.rating
-        );
-      }
-
-      if (filterType.location) {
-        filteredDoctors = filteredDoctors.filter((doctor) =>
-          doctor.location?.includes(filterType.location)
-        );
-      }
-
-      setFilterData(filteredDoctors);
-    };
-
-    filterDoctors();
-  }, [filterType, doctors]);
 
   // Sort doctors based on selected criteria
   useEffect(() => {
@@ -251,7 +205,14 @@ export default function ApolloPage() {
         <div className="flex flex-col lg:flex-row gap-6">
           {/* Sidebar - Desktop */}
           <div className="hidden md:block w-full lg:w-64 flex-shrink-0">
-            <Sidebar filterType={filterType} setFilterType={setFilterType} />
+            <Sidebar
+              doctors={doctors}
+              setFilterData={setFilterData}
+              setIsLoading={setIsLoading}
+              // filterData={filterData}
+              filterType={filterType}
+              setFilterType={setFilterType}
+            />
           </div>
 
           {/* Mobile Filter Button */}
@@ -268,6 +229,10 @@ export default function ApolloPage() {
               <SheetContent side="left" className="w-4/5 sm:w-80 p-0">
                 <div className="p-4 overflow-y-auto h-full">
                   <Sidebar
+                   doctors={doctors}
+                    setIsLoading={setIsLoading}
+                    setFilterData={setFilterData}
+                    // filterData={filterData}
                     filterType={filterType}
                     setFilterType={setFilterType}
                     className="w-full border-r-0"

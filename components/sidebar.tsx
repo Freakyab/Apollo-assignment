@@ -1,14 +1,21 @@
 import React from "react";
 import { Checkbox } from "./ui/checkbox";
 import { Button } from "./ui/button";
+import toast from "react-hot-toast";
 
 function Sidebar({
   filterType,
   className,
+  doctors,
+  setIsLoading,
+  setFilterData,
   setFilterType,
 }: {
-  className?: string;
   filterType: Filter;
+  className?: string;
+  doctors: Doctor[];
+  setIsLoading: React.Dispatch<React.SetStateAction<boolean>>;
+  setFilterData: React.Dispatch<React.SetStateAction<Doctor[]>>;
   setFilterType: React.Dispatch<React.SetStateAction<Filter>>;
 }) {
   const handleFilterClear = () => {
@@ -22,6 +29,33 @@ function Sidebar({
       rating: 0,
       search: "",
     });
+    setFilterData(doctors);
+  };
+
+  const handleFilters = async () => {
+    try {
+      setIsLoading(true);
+      const response = await fetch(
+        "https://apollo-assignment-backend.vercel.app/list-doctor-with-filter",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(filterType),
+        }
+      );
+      const data = await response.json();
+      if (data.status) {
+        setFilterData(data.data);
+      } else {
+        toast.error("No data found for the selected filters");
+      }
+    } catch (error) {
+      toast.error("Error applying filters");
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -54,7 +88,9 @@ function Sidebar({
           <div className="flex items-center">
             <Checkbox
               id="exp-6-10"
-              checked={filterType.startRange === 6 && filterType.endRange === 10}
+              checked={
+                filterType.startRange === 6 && filterType.endRange === 10
+              }
               onCheckedChange={(checked) => {
                 setFilterType({
                   ...filterType,
@@ -69,7 +105,9 @@ function Sidebar({
           </div>
           <div className="flex items-center">
             <Checkbox
-              checked={filterType.startRange === 11 && filterType.endRange === 16}
+              checked={
+                filterType.startRange === 11 && filterType.endRange === 16
+              }
               id="exp-11-16"
               onCheckedChange={(checked) => {
                 setFilterType({
@@ -107,7 +145,9 @@ function Sidebar({
           </div>
           <div className="flex items-center">
             <Checkbox
-              checked={filterType.startFee === 500 && filterType.endFee === 1000}
+              checked={
+                filterType.startFee === 500 && filterType.endFee === 1000
+              }
               id="fee-500-1000"
               onCheckedChange={(checked) => {
                 setFilterType({
@@ -123,7 +163,9 @@ function Sidebar({
           </div>
           <div className="flex items-center">
             <Checkbox
-              checked={filterType.startFee === 1000 && filterType.endFee === 10000}
+              checked={
+                filterType.startFee === 1000 && filterType.endFee === 10000
+              }
               id="fee-1000-plus"
               onCheckedChange={(checked) => {
                 setFilterType({
@@ -190,6 +232,9 @@ function Sidebar({
           </div>
         </div>
       </div>
+      <Button variant="default" onClick={handleFilters}>
+        Apply Filters
+      </Button>
     </div>
   );
 }

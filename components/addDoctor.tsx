@@ -79,7 +79,7 @@ function AddDoctorDialog({
         language: doctor.language,
       };
 
-      const response = await fetch("https://apollo-assignment-backend.vercel.app/add", {
+      const response = await fetch("https://apollo-assignment-backend.vercel.app/add-doctor", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

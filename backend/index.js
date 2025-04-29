@@ -940,7 +940,50 @@ app.get("/", async (_, res) => {
   }
 });
 
-app.post("/add", async (req, res) => {
+app.post("/list-doctor-with-filter" , async (req, res) => {
+  try{
+
+    const { startRange, endRange, startFee, endFee, language, rating, location, search } = req.body;
+    console.log(req.body);
+    
+    const query = {};
+
+    if (startRange !== -1 && endRange !== -1) {
+      query.year = { $gte: startRange, $lte: endRange };
+    }
+    if (startFee !== -1 && endFee !== -1) {
+      query.fee = { $gte: startFee, $lte: endFee };
+    }
+    if (language) {
+      query.language = { $regex: language, $options: "i" };
+    }
+    if (rating) {
+      query.rating = { $gte: rating };
+    }
+    if (location) {
+      query.location = { $regex: location, $options: "i" };
+    }
+    if (search) {
+      query.name = { $regex: search, $options: "i" };
+    }
+
+    const doctors = await Doctor.find(query);
+    return res.status(200).json({
+      status: true,
+      data: doctors,
+    });
+
+  }catch(err){
+    console.log(err.message);
+    return res.status(500).json({
+      message: "Internal server error",
+      status: false,
+    });
+  }
+
+})
+
+app.post("/add-doctor", async (req, res) => {
   try {
     const { name, year, post, location, fee, language } = req.body;
     
