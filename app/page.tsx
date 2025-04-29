@@ -1,13 +1,6 @@
 "use client";
 import { useState, useEffect } from "react";
-import {
-  CheckCircle,
-  ArrowUpDown,
-  ThumbsUp,
-  X,
-  Filter,
-  Search,
-} from "lucide-react";
+import { CheckCircle, ArrowUpDown, ThumbsUp, X, Filter } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import {
@@ -35,6 +28,7 @@ import toast from "react-hot-toast";
 import Footer from "@/components/footer";
 
 export default function ApolloPage() {
+  // State variables
   const [selectedFilter, setSelectedFilter] = useState("relevance");
   const [filterData, setFilterData] = useState<Doctor[]>([]);
   const [doctors, setDoctors] = useState<Doctor[]>([]);
@@ -57,12 +51,15 @@ export default function ApolloPage() {
   useEffect(() => {
     const fetchDoctors = async () => {
       try {
-        const response = await fetch("https://apollo-assignment-backend.vercel.app/", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
+        const response = await fetch(
+          "https://apollo-assignment-backend.vercel.app/",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+            },
+          }
+        );
 
         if (!response.ok) {
           throw new Error("Network response was not ok");
@@ -75,8 +72,9 @@ export default function ApolloPage() {
           throw new Error(resData.message);
         }
       } catch (error) {
-        const errorMessage = error instanceof Error ? error.message : "An unknown error occurred"
-        toast.error(errorMessage)
+        const errorMessage =
+          error instanceof Error ? error.message : "An unknown error occurred";
+        toast.error(errorMessage);
         console.error("Error fetching data:", error);
       }
     };
@@ -84,6 +82,7 @@ export default function ApolloPage() {
     fetchDoctors();
   }, []);
 
+  // Filter doctors based on selected criteria
   useEffect(() => {
     const filterDoctors = () => {
       let filteredDoctors: Doctor[] = doctors;
@@ -127,6 +126,7 @@ export default function ApolloPage() {
     filterDoctors();
   }, [filterType, doctors]);
 
+  // Sort doctors based on selected criteria
   useEffect(() => {
     let filteredDoctors = [...filterData];
     if (selectedFilter === "experience") {
@@ -150,7 +150,7 @@ export default function ApolloPage() {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Header */}
+      {/* Navbar */}
       <Navbar
         isOpen={isAddDoctorOpen}
         setIsOpen={setIsAddDoctorOpen}
@@ -160,7 +160,15 @@ export default function ApolloPage() {
         setSearchQuery={setSearchQuery}
       />
 
-      <AddDoctorDialog isOpen={isAddDoctorOpen} setIsOpen={setIsAddDoctorOpen} />
+      {/* 
+        Add Doctor Dialog
+        This component is used to add a new doctor to the list.
+      */}
+      <AddDoctorDialog
+        isOpen={isAddDoctorOpen}
+        setIsOpen={setIsAddDoctorOpen}
+      />
+      
       {/* Mobile Menu */}
       <div
         className={`md:hidden bg-white fixed top-0 left-0 w-full h-full z-50 transform transition-transform duration-300 ${
@@ -229,7 +237,7 @@ export default function ApolloPage() {
       </div>
 
       {/* Main Content */}
-      <main className="container mx-auto px-4 py-6">
+      <div className="container mx-auto px-4 py-6">
         <div className="flex flex-col lg:flex-row gap-6">
           {/* Sidebar - Desktop */}
           <div className="hidden md:block w-full lg:w-64 flex-shrink-0">
@@ -357,6 +365,7 @@ export default function ApolloPage() {
 
             {/* Pagination */}
             <div className="overflow-x-auto">
+                    {/* load 10 doctors at a time */}
               <Pagination>
                 <PaginationContent>
                   <PaginationItem>
@@ -420,7 +429,7 @@ export default function ApolloPage() {
             </div>
           </div>
         </div>
-      </main>
+      </div>
       <Footer />
     </div>
   );
