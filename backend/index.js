@@ -944,7 +944,6 @@ app.post("/list-doctor-with-filter" , async (req, res) => {
   try{
 
     const { startRange, endRange, startFee, endFee, language, rating, location, search } = req.body;
-    console.log(req.body);
     
     const query = {};
 
